@@ -1,4 +1,4 @@
-import { query, mutation, action } from "./_generated/server";
+import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 
 // Simple encryption/decryption using base64 encoding with a basic cipher
@@ -18,7 +18,7 @@ function decryptData(encryptedData: string): string {
       String.fromCharCode(char.charCodeAt(0) - 3)
     ).join('');
     return atob(decoded);
-  } catch (error) {
+  } catch {
     throw new Error("Invalid encrypted data");
   }
 }
@@ -71,6 +71,7 @@ export const processTrackingClick = mutation({
         clickedAt: Date.now(),
         userAgent: args.userAgent,
         ipAddress: args.ipAddress,
+        suppressChatDomain: typeof data.suppressChatDomain === "string" ? data.suppressChatDomain : undefined,
       });
       
       return {
@@ -78,6 +79,7 @@ export const processTrackingClick = mutation({
         redirectUrl: data.url,
         name: data.name,
         email: data.email,
+        suppressChatDomain: typeof data.suppressChatDomain === "string" ? data.suppressChatDomain : undefined,
       };
     } catch (error) {
       console.error("Error processing tracking click:", error);

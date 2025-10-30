@@ -25,9 +25,17 @@ export default function Page() {
 
           if (result.success) {
             toast.success(`Redirecting ${result.name} to ${result.redirectUrl}`);
+            try {
+              if (result.suppressChatDomain) {
+                const expiresAtMs = Date.now() + 15 * 60 * 1000;
+                localStorage.setItem('suppressChatDomain', JSON.stringify({ domain: result.suppressChatDomain, expiresAtMs }));
+              }
+            } catch {
+              // ignore storage errors (e.g., private mode)
+            }
             setTimeout(() => {
               window.location.href = result.redirectUrl;
-            }, 2000);
+            }, 10000);
           } else {
             toast.error(result.error || "Invalid tracking link");
             setIsRedirecting(false);

@@ -10,6 +10,7 @@ const applicationTables = {
     clickedAt: v.number(),
     userAgent: v.optional(v.string()),
     ipAddress: v.optional(v.string()),
+    suppressChatDomain: v.optional(v.string()),
   }).index("by_email", ["email"])
     .index("by_target_url", ["targetUrl"])
     .index("by_clicked_at", ["clickedAt"]),
