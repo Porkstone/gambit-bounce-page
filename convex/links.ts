@@ -80,6 +80,7 @@ export const processTrackingClick = mutation({
         name: data.name,
         email: data.email,
         suppressChatDomain: typeof data.suppressChatDomain === "string" ? data.suppressChatDomain : undefined,
+        watcherId: typeof data.watcherId === "string" ? data.watcherId : undefined,
       };
     } catch (error) {
       console.error("Error processing tracking click:", error);

@@ -17,27 +17,32 @@ export default function Page() {
       setIsRedirecting(true);
       void (async () => {
         try {
-          const result = await processClick({
+          const payload = await processClick({
             encryptedData: decodeURIComponent(encryptedData),
             userAgent: navigator.userAgent,
             ipAddress: undefined,
           });
 
-          if (result.success) {
-            toast.success(`Redirecting ${result.name} to ${result.redirectUrl}`);
+          if (payload.success) {
+            toast.success(`Redirecting ${payload.name} to ${payload.redirectUrl}`);
             try {
-              if (result.suppressChatDomain) {
+              if (payload.suppressChatDomain) {
                 const expiresAtMs = Date.now() + 15 * 60 * 1000;
-                localStorage.setItem('suppressChatDomain', JSON.stringify({ domain: result.suppressChatDomain, expiresAtMs }));
+                const value = {
+                  domain: payload.suppressChatDomain,
+                  expiresAtMs,
+                  ...(payload.watcherId ? { watcherId: payload.watcherId } : {}),
+                };
+                localStorage.setItem('suppressChatDomain', JSON.stringify(value));
               }
             } catch {
               // ignore storage errors (e.g., private mode)
             }
             setTimeout(() => {
-              window.location.href = result.redirectUrl;
+              window.location.href = payload.redirectUrl;
             }, 10000);
           } else {
-            toast.error(result.error || "Invalid tracking link");
+            toast.error(payload.error || "Invalid tracking link");
             setIsRedirecting(false);
           }
         } catch {
